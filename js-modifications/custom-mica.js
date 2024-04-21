@@ -35,8 +35,11 @@ function applyMica() {
     + ' html:has(#browser.theme-dark) body {background-color: rgba(45,45,45, 1); }'
     + ' html:has(#browser.theme-light) #mica-filter {background-color: rgba(245,245,245, 0.8) }'
     + ' html:has(#browser.theme-light) #mica-background {filter: blur(400px) saturate(1.6) contrast(1); }'
+    + ' html:has(#browser.theme-light) #mica-background-back { filter: blur(100px) saturate(1) contrast(2.5); }'
     + ' html:has(#browser.theme-dark) #mica-filter { background-color: rgba(0, 0, 0, 0.6); }'
-    + ' html:has(#browser.theme-dark) #mica-background {filter: blur(400px) saturate(1.5); }';
+    + ' html:has(#browser.theme-dark) #mica-background {filter: blur(800px) saturate(1.5); }'
+    + ' html:has(#browser.theme-dark) #mica-background-back { filter: blur(100px) saturate(1) contrast(1.5); opacity: 0.5; }'
+    ;
   documentHead.appendChild(customCSSForMica);
 }
 
@@ -60,7 +63,7 @@ function insertMicaElements(imgIndex = 0) {
     `position: fixed; ` +
     `background-image: ${micaBackgroundImage}; background-size: cover; ` +
     `translate: 0px 0px; width: ${window.screen.width + 'px'}; height: ${window.screen.height + 'px'}; ` +
-    `z-index: -12; filter: blur(100px) saturate(1) contrast(2.5);`);
+    `z-index: -12;`);
   micaBackgroundBack.setAttribute('id', 'mica-background-back');
 
   const micaBackground = document.createElement('div');
