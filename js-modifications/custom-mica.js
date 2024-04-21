@@ -1,10 +1,5 @@
 // global
 
-const state = {
-  isHoverTabActive: false,
-  isMouseInTab: false,
-}
-
 // methods
 
 function waitForElm(selector) {
@@ -26,17 +21,6 @@ function waitForElm(selector) {
       subtree: true
     });
   });
-}
-
-/**
- * @param {Element} element 
- */
-function copyAndInsertElement(element) {
-  const copy = element.cloneNode(true);
-  console.log('COPY EL', copy)
-  element.parentNode.insertBefore(copy, element.nextSibling);
-  element.remove();
-  return copy;
 }
 
 function applyMica() {
@@ -129,112 +113,7 @@ async function addMicaObserver() {
   attrObserver.observe(browser, { attributes: true });
 }
 
-/**
- * 
- * @param args {{
-  tabLeft?: boolean,
-  urlLeft?: Boolean,
-  urlRight?: Boolean,
-}} 
- */
-function setTabbarButtons(args) {
-  const addressBar = document.querySelector('.UrlBar-AddressField');
-  // Create containers
-  const tabsLeftButtonsEl = document.createElement("div");
-  tabsLeftButtonsEl.classList.add('toolbar', 'toolbar-tabbar');
-  tabsLeftButtonsEl.style.marginRight = '5px';
-  const firstTabEl = document.querySelector('#tabs-container>.resize');
-  firstTabEl.before(tabsLeftButtonsEl);
-
-  const urlBarLeftButtonsEl = document.createElement('div');
-  urlBarLeftButtonsEl.setAttribute('id', 'Urlbar-left-buttons');
-  addressBar.insertBefore(urlBarLeftButtonsEl, addressBar.firstChild);
-
-  const urlBarRightButtonsEl = document.createElement('div');
-  urlBarRightButtonsEl.setAttribute('id', 'Urlbar-right-buttons');
-  addressBar.appendChild(urlBarRightButtonsEl);
-
-  // Append buttons from navbar
-  /** @type {Element[]} */
-  const navbarButtons = [...document.querySelectorAll("#main > div.mainbar > div > div")];
-  const addressBarIndex = navbarButtons.indexOf(navbarButtons.find(i => i.classList.contains('UrlBar-AddressField')));
-  const navbarLeftButtons = navbarButtons.slice(0, addressBarIndex);
-  const navbarRightButtons = navbarButtons.slice(addressBarIndex + 1);
-
-  const tabLeftEnd = 3;
-  if (args.tabLeft) {
-    const tabbarLeftButtons = navbarLeftButtons.slice(0, tabLeftEnd);
-    tabbarLeftButtons.forEach(i => tabsLeftButtonsEl.appendChild(i));
-  }
-  if (args.urlLeft) {
-    const addressBarLeftButtons = navbarLeftButtons.slice(tabLeftEnd);
-    addressBarLeftButtons.forEach(i => urlBarLeftButtonsEl.appendChild(i));
-  }
-
-  if (args.urlRight) {
-    // Wait UI proces changes (prevent crashing)
-    setTimeout(() => {
-      const addressBarRightButtons = navbarRightButtons;
-      addressBarRightButtons.forEach(i => urlBarRightButtonsEl.appendChild(i));
-    }, 5);
-  }
-}
-
-/**
- * 
- * @param {NodeListOf<Element> | undefined} tabsTarget 
- */
-function addTabsListeners() {
-  const tabs = document.querySelectorAll('.tab-strip>span>.tab-position>.tab:not(.listener)');
-  for (const tab of tabs) {
-    tab.classList.add('listener');
-    tab.addEventListener('mouseenter', (event) => {
-      state.isHoverTabActive = event.target.classList.contains('active');
-      state.isMouseInTab = true;
-    });
-    tab.addEventListener('mouseleave', () => {
-      state.isMouseInTab = false;
-    });
-    tab.addEventListener('click', () => {
-      const urlInput = document.querySelector('#urlFieldInput');
-      if (state.isHoverTabActive && urlInput) {
-        urlInput.focus();
-        urlInput.select();
-      }
-      state.isHoverTabActive = true;
-    });
-  }
-}
-
-function addTabbarListeners() {
-  const inner = document.querySelector('.inner');
-  inner.addEventListener('click', () => {
-    const urlInput = document.querySelector('#urlFieldInput');
-    urlInput.blur();
-  });
-}
-
-async function addTabsObserver() {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach(mu => {
-      if (mu.addedNodes.length > 0) {
-        addTabsListeners();
-      }
-    });
-  });
-  const tabStrip = await waitForElm('.tab-strip');
-  observer.observe(tabStrip, { childList: true });
-}
-
 (async function main() {
   applyMica();
   await addMicaObserver();
-  setTabbarButtons({
-    tabLeft: true,
-    urlLeft: true,
-    urlRight: true
-  });
-  addTabsListeners();
-  addTabbarListeners();
-  addTabsObserver();
 })();
