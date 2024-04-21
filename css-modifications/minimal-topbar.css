@@ -60,4 +60,18 @@
 /* Tab light bold - like Chrome */
 .tab-position .title {
     /* font-weight: 500; */
+    display: flex;
+}
+
+html:has(#browser.isMinimalTabShort) .tab-position .title,
+html:has(#browser.isMinimalTabShort) .tab-position .favicon {
+    display: flex !important;
+}
+
+html:has(#browser.isMinimalTabShort) .tab-position .tab.tab-mini .title {
+    display: none !important;
+}
+
+html:has(#browser.isMinimalTabShort) .tab-position .close {
+    display: none;
 }

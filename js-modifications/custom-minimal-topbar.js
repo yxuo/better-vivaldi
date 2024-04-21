@@ -90,6 +90,7 @@ function addTabsListeners() {
     tab.addEventListener('mouseenter', (event) => {
       minimalTopbarState.isHoverTabActive = event.target.classList.contains('active');
       minimalTopbarState.isMouseInTab = true;
+      updateCloseButtonVisibility();
     });
     tab.addEventListener('mouseleave', () => {
       minimalTopbarState.isMouseInTab = false;
@@ -101,7 +102,27 @@ function addTabsListeners() {
         urlInput.select();
       }
       minimalTopbarState.isHoverTabActive = true;
+      updateCloseButtonVisibility();
     });
+  }
+}
+
+/**
+ * Hides close button, even on mouseover, if tab is too short and if using minimalist topbar mode.
+ * @param {Element} targetTab 
+ */
+function updateCloseButtonVisibility() {
+  const mainbar = document.querySelector('.mainbar');
+  const tabSample = document.querySelector('.tab-strip>span>.tab-position>.tab:not(.pinned)');
+  const closeTabSample = tabSample && tabSample.querySelector('.close');
+  const isMinimalTabShort = tabSample && tabSample.clientWidth < 50
+    && closeTabSample && mainbar.clientHeight === 0;
+  const tabs = document.querySelectorAll('.tab-strip>span>.tab-position>.tab');
+  for (const tab of tabs) {
+    const closeTab = tab.querySelector('.close');
+    if (closeTab) {
+      closeTab.style.display = isMinimalTabShort ? 'none' : '';
+    }
   }
 }
 
