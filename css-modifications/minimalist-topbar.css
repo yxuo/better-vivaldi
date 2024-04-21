@@ -1,0 +1,63 @@
+#tabs-container.top {
+    margin-right: 30px;
+}
+
+.window-minimize,
+.window-maximize,
+.window-close {
+    height: 30px !important;
+    background-size: contain;
+}
+
+.UrlBar-AddressField>.button-toolbar>button,
+#Urlbar-left-buttons>.button-toolbar>button,
+#Urlbar-right-buttons>.button-toolbar>button {
+    border: none;
+    padding: 0px;
+}
+
+#Urlbar-left-buttons>.toolbar-extensions>.button-toolbar,
+#Urlbar-right-buttons>.toolbar-extensions>.button-toolbar {
+    background-color: transparent;
+}
+
+#Urlbar-left-buttons>.toolbar-extensions,
+#Urlbar-right-buttons>.toolbar-extensions {
+    max-height: 100% !important;
+}
+
+#Urlbar-left-buttons>.toolbar-extensions>div>button,
+#Urlbar-right-buttons>.toolbar-extensions>div>button {
+    height: 100%;
+}
+
+#Urlbar-left-buttons>.toolbar-extensions>div>button:hover,
+#Urlbar-right-buttons>.toolbar-extensions>div>button:hover {
+    background-color: transparent;
+}
+
+#Urlbar-left-buttons,
+#Urlbar-right-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+/* tabbar ui */
+.address-bottom #tabs-tabbar-container.top,
+.address-bottom-off #tabs-tabbar-container.top,
+.address-top-off #tabs-tabbar-container.top {
+    border-bottom-width: 1px !important;
+}
+
+.svg-tab-stack line,
+.svg-tab-selection line,
+.svg-tab-stack rect,
+.svg-tab-selection rect {
+    fill: none;
+    stroke-width: 2px;
+}
+
+/* Tab light bold - like Chrome */
+.tab-position .title {
+    /* font-weight: 500; */
+}

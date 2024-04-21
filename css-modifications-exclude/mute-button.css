@@ -1,0 +1,26 @@
+/* mute icon */
+#tabs-container .tab.tab-small.audio-on .tab-audio,
+#tabs-container .tab.pinned.audio-on .tab-audio,
+#tabs-container .tab.tab-small.audio-muted .tab-audio,
+#tabs-container .tab.pinned.audio-muted .tab-audio,
+#tabs-container .tab.tab-small.tab-captured .tab-audio,
+#tabs-container .tab.pinned.tab-captured .tab-audio,
+#tabs-subcontainer .tab.tab-small.audio-on .tab-audio,
+#tabs-subcontainer .tab.pinned.audio-on .tab-audio,
+#tabs-subcontainer .tab.tab-small.audio-muted .tab-audio,
+#tabs-subcontainer .tab.pinned.audio-muted .tab-audio,
+#tabs-subcontainer .tab.tab-small.tab-captured .tab-audio,
+#tabs-subcontainer .tab.pinned.tab-captured .tab-audio
+ {
+    left: 0px !important;
+    top: 0px !important;
+    width: 16px;
+    height: 16px;
+}
+
+.audioicon {
+    /* left: 0px !important;
+    top: 0px !important; */
+    width: 24px;
+    height: 24px;
+}
