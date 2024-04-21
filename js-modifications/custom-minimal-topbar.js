@@ -80,31 +80,44 @@ async function setTabbarButtons(args) {
 }
 
 /**
+ * We listen to `tabPosition` instead of `tab` because listener class is cleared in tab by Vivaldi, 
+ * so we end up duplicating listeners.
  * 
  * @param {NodeListOf<Element> | undefined} tabsTarget 
  */
-function addTabsListeners() {
-  const tabs = document.querySelectorAll('.tab-strip>span>.tab-position>.tab:not(.listener)');
-  for (const tab of tabs) {
-    tab.classList.add('listener');
-    tab.addEventListener('mouseenter', (event) => {
-      minimalTopbarState.isHoverTabActive = event.target.classList.contains('active');
+function addListenersForTabs() {
+  const tabs = document.querySelectorAll('.tab-strip>span>.tab-position:not(.listener)');
+  for (const tabPosition of tabs) {
+    tabPosition.addEventListener('mouseenter', (event) => {
+      const tab = event.target.firstChild;
+      minimalTopbarState.isHoverTabActive = tab.classList.contains('active');
+      console.log('Enter tab', minimalTopbarState.isHoverTabActive);
       minimalTopbarState.isMouseInTab = true;
       updateCloseButtonVisibility();
     });
-    tab.addEventListener('mouseleave', () => {
+    tabPosition.addEventListener('mouseleave', () => {
       minimalTopbarState.isMouseInTab = false;
+      console.log('leave tab', minimalTopbarState.isMouseInTab);
     });
-    tab.addEventListener('click', () => {
+    tabPosition.addEventListener('click', () => {
       const urlInput = document.querySelector('#urlFieldInput');
       if (minimalTopbarState.isHoverTabActive && urlInput) {
+        console.log('click tab', minimalTopbarState.isMouseInTab);
         urlInput.focus();
         urlInput.select();
       }
       minimalTopbarState.isHoverTabActive = true;
       updateCloseButtonVisibility();
     });
+    tabPosition.classList.add('listener');
   }
+}
+
+/**
+ * @param {Element} tab 
+ */
+function addListenersForTab(tab) {
+
 }
 
 /**
@@ -117,12 +130,12 @@ function updateCloseButtonVisibility() {
   const closeTabSample = tabSample && tabSample.querySelector('.close');
   const isMinimalTabShort = tabSample && tabSample.clientWidth < 50
     && closeTabSample && mainbar.clientHeight === 0;
-  const tabs = document.querySelectorAll('.tab-strip>span>.tab-position>.tab');
-  for (const tab of tabs) {
-    const closeTab = tab.querySelector('.close');
-    if (closeTab) {
-      closeTab.style.display = isMinimalTabShort ? 'none' : '';
-    }
+  const browser = document.getElementById('browser');
+  // Style will be applied in css using this class
+  if (isMinimalTabShort) {
+    browser.classList.add('isMinimalTabShort');
+  } else {
+    browser.classList.remove('isMinimalTabShort');
   }
 }
 
@@ -138,7 +151,7 @@ async function addTabsObserver() {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mu => {
       if (mu.addedNodes.length > 0) {
-        addTabsListeners();
+        addListenersForTabs();
       }
     });
   });
@@ -152,7 +165,7 @@ async function addTabsObserver() {
     urlLeft: true,
     urlRight: true
   });
-  addTabsListeners();
+  addListenersForTabs();
   addTabbarListeners();
   addTabsObserver();
 })();
