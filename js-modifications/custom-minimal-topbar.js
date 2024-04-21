@@ -36,13 +36,13 @@ function waitForElm(selector) {
   urlRight?: Boolean,
 }} 
  */
-function setTabbarButtons(args) {
-  const addressBar = document.querySelector('.UrlBar-AddressField');
+async function setTabbarButtons(args) {
+  const addressBar = await waitForElm('.UrlBar-AddressField');
   // Create containers
   const tabsLeftButtonsEl = document.createElement("div");
   tabsLeftButtonsEl.classList.add('toolbar', 'toolbar-tabbar');
   tabsLeftButtonsEl.style.marginRight = '5px';
-  const firstTabEl = document.querySelector('#tabs-container>.resize');
+  const firstTabEl = await waitForElm('#tabs-container>.resize');
   firstTabEl.before(tabsLeftButtonsEl);
 
   const urlBarLeftButtonsEl = document.createElement('div');
@@ -126,7 +126,7 @@ async function addTabsObserver() {
 }
 
 (async function main() {
-  setTabbarButtons({
+  await setTabbarButtons({
     tabLeft: true,
     urlLeft: true,
     urlRight: true

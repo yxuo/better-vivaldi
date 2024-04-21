@@ -33,8 +33,8 @@ function applyMica() {
     + ' html:has(#browser.isblurred) #mica-opacity-layer { opacity: 0; }'
     + ' html:has(#browser.theme-light) body {background-color: rgba(210,210,210, 1); }'
     + ' html:has(#browser.theme-dark) body {background-color: rgba(45,45,45, 1); }'
-    + ' html:has(#browser.theme-light) #mica-filter {background-color: rgba(245,245,245, 0.7) }'
-    + ' html:has(#browser.theme-light) #mica-background {filter: blur(400px) saturate(1.6); }'
+    + ' html:has(#browser.theme-light) #mica-filter {background-color: rgba(245,245,245, 0.8) }'
+    + ' html:has(#browser.theme-light) #mica-background {filter: blur(400px) saturate(1.6) contrast(1); }'
     + ' html:has(#browser.theme-dark) #mica-filter { background-color: rgba(0, 0, 0, 0.6); }'
     + ' html:has(#browser.theme-dark) #mica-background {filter: blur(400px) saturate(1.5); }';
   documentHead.appendChild(customCSSForMica);
@@ -55,6 +55,14 @@ function insertMicaElements(imgIndex = 0) {
   micaBackgroundBuffer.setAttribute('id', 'mica-background-buffer');
   micaBackgroundBuffer.style = 'opacity: 0;';
 
+  const micaBackgroundBack = document.createElement('div');
+  micaBackgroundBack.setAttribute('style',
+    `position: fixed; ` +
+    `background-image: ${micaBackgroundImage}; background-size: cover; ` +
+    `translate: 0px 0px; width: ${window.screen.width + 'px'}; height: ${window.screen.height + 'px'}; ` +
+    `z-index: -12; filter: blur(100px) saturate(1) contrast(2.5);`);
+  micaBackgroundBack.setAttribute('id', 'mica-background-back');
+
   const micaBackground = document.createElement('div');
   // const moveY = (2560 - 1920 * (1920 / 2560)) / 10 * 1,5
   micaBackground.setAttribute('style',
@@ -69,6 +77,7 @@ function insertMicaElements(imgIndex = 0) {
   micaFilter.setAttribute('id', 'mica-filter');
 
   micaOpacityLayer.appendChild(micaBackgroundBuffer);
+  micaOpacityLayer.appendChild(micaBackgroundBack);
   micaOpacityLayer.appendChild(micaBackground);
   micaOpacityLayer.appendChild(micaFilter);
 
@@ -79,6 +88,7 @@ function insertMicaElements(imgIndex = 0) {
 };
 
 function updateMicaParallax() {
+  const micaBackgroundBack = document.getElementById('mica-background-back');
   const micaBackground = document.getElementById('mica-background');
   if (!micaBackground) {
     return;
@@ -87,10 +97,13 @@ function updateMicaParallax() {
   const micaY = window.screenY * -1;
   micaBackground.style.top = micaY + 'px';
   micaBackground.style.left = micaX + 'px';
+  micaBackgroundBack.style.top = micaY + 'px';
+  micaBackgroundBack.style.left = micaX + 'px';
 };
 
 /** If user changed desktop wallpaper, Mica will update as well */
 function updateMicaWallpeper() {
+  const micaBackgroundBack = document.getElementById('mica-background-back');
   const micaBackground = document.getElementById('mica-background');
   /** Count index from 1 to 10 then reset */
   const index = Number(micaBackground.style.backgroundImage.slice(-3, -2));
@@ -99,6 +112,7 @@ function updateMicaWallpeper() {
   micaBackgroundBuffer.style.backgroundImage = `url("${newImageUrl}")`;
   setTimeout(() => {
     micaBackground.style.backgroundImage = `url("${newImageUrl}")`;
+    micaBackgroundBack.style.backgroundImage = `url("${newImageUrl}")`;
   }, 50);
 }
 
